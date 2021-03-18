@@ -19,8 +19,8 @@ of;
 next;
 #X obj 76 84 shuffle -1 6 0.25;
 #X text 286 122 (0 <= fraction <= 0.5) (passive);
-#X text 286 138 changes to upper and fraction take effect when lower
-changes;
+#X text 286 138 upper and fraction inputs take effect when lower is
+input;
 #X msg 76 52 0;
 #X msg 125 52 9;
 #X msg 175 52 0.3;
