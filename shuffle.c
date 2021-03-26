@@ -24,20 +24,12 @@ int randomInt (int a, int b) { // returns random int in interval [a, b]
   return (int)(random * (b - a + 1)) + a;
 }
 
-void shufflePartial(t_shuffle *x, int begin, int end) { // Fisher–Yates shuffle algorithm
+void shuffleArray(t_shuffle *x, int begin, int end) { // Fisher–Yates shuffle algorithm
   for (int i = end; i > begin; i--) { // shuffle
     int j = randomInt(begin, i);
     int tmp = x->array[i];
     x->array[i] = x->array[j];
     x->array[j] = tmp;
-  }
-}
-
-void shuffleArray (t_shuffle *x, int fractional) {
-  if (!fractional) shufflePartial(x, 0, x->array_size - 1); // full shuffle
-  else {
-    if(x->fracint) shufflePartial(x, 0, x->array_size - x->fracint - 1); // omit last fraction
-    shufflePartial(x, x->fracint, x->array_size - 1); // omit first fraction
   }
 }
 
@@ -61,12 +53,13 @@ void reset (t_shuffle *x) {
   x->array = (int *)getbytes(x->array_size * sizeof(int));
   x->fracint = (int)(x->fraction * x->array_size);
   for (int i = 0; i < x->array_size; i++) x->array[i] = x->lower + i;
-  shuffleArray(x, 0);
+  shuffleArray(x, 0, x->array_size - 1); // full shuffle
 }
 
 void shuffle_bang (t_shuffle *x) {
   if (x->index == x->array_size) {
-    shuffleArray(x, 1);
+    if(x->fracint) shuffleArray(x, 0, x->array_size - x->fracint - 1); // omit last fraction
+    shuffleArray(x, x->fracint, x->array_size - 1); // omit first fraction
     x->index = 0;
   }
   outlet_float(x->out_series, (float)x->array[x->index++]);
