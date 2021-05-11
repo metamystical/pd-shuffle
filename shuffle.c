@@ -1,5 +1,4 @@
 #include "m_pd.h"
-
 #include <stdlib.h>
 #include <time.h>
 
@@ -19,21 +18,21 @@ typedef struct shuffle {
   int index;
 } t_shuffle;
 
-int randomInt (int a, int b) { // returns random int in interval [a, b]
+int shuffle_randomInt (int a, int b) { // returns random int in interval [a, b]
   double random = (double)rand() / (double)((unsigned)RAND_MAX + 1); // [0.0, 1.0)
   return (int)(random * (b - a + 1)) + a;
 }
 
-void shuffleArray(t_shuffle *x, int begin, int end) { // Fisher–Yates shuffle algorithm
+void shuffle_array(t_shuffle *x, int begin, int end) { // Fisher–Yates shuffle algorithm
   for (int i = end; i > begin; i--) { // shuffle
-    int j = randomInt(begin, i);
+    int j = shuffle_randomInt(begin, i);
     int tmp = x->array[i];
     x->array[i] = x->array[j];
     x->array[j] = tmp;
   }
 }
 
-void reset (t_shuffle *x) {
+void shuffle_reset (t_shuffle *x) {
   if (x->upper < x->lower) {
     error("[shuffle ]: upper < lower - swapping");
     int tmp = x->upper;
@@ -53,13 +52,13 @@ void reset (t_shuffle *x) {
   x->array = (int *)getbytes(x->array_size * sizeof(int));
   x->fracint = (int)(x->fraction * x->array_size);
   for (int i = 0; i < x->array_size; i++) x->array[i] = x->lower + i;
-  shuffleArray(x, 0, x->array_size - 1); // full shuffle
+  shuffle_array(x, 0, x->array_size - 1); // full shuffle
 }
 
 void shuffle_bang (t_shuffle *x) {
   if (x->index == x->array_size) {
-    if(x->fracint) shuffleArray(x, 0, x->array_size - x->fracint - 1); // omit last fraction
-    shuffleArray(x, x->fracint, x->array_size - 1); // omit first fraction
+    if(x->fracint) shuffle_array(x, 0, x->array_size - x->fracint - 1); // omit last fraction
+    shuffle_array(x, x->fracint, x->array_size - 1); // omit first fraction
     x->index = 0;
   }
   outlet_float(x->out_series, (float)x->array[x->index++]);
@@ -69,7 +68,7 @@ void shuffle_lower (t_shuffle *x, t_floatarg f) {
   x->lower = (int)f;
   x->upper = (int)x->upper_f;
   freebytes(x->array, x->array_size);
-  reset(x);
+  shuffle_reset(x);
 }
 
 void *shuffle_new (t_floatarg lower, t_floatarg upper, t_floatarg fraction) {
@@ -82,7 +81,7 @@ void *shuffle_new (t_floatarg lower, t_floatarg upper, t_floatarg fraction) {
   x->upper = (int)upper;
   x->upper_f = upper;
   x->fraction = fraction;
-  reset(x);
+  shuffle_reset(x);
   return (void *)x;
 }
 
