@@ -9,12 +9,12 @@ This is a drop-in replacement for the object of the same name in the [Motex libr
 
 [shuffle ] outputs all of the integers in a specified range in random order without repeating any, then reshuffles. Inputs are described in the following table:
 
-| Label    | Input | Type    | Action                                                                                                                                 |
-|----------|---------|---------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **bang**     | 0       | active  | output next integer in the series                                                                                                      |
-| **lower**    | 0       | active  | update lower bound of range, trigger reset/reshuffle                                                                                          |
-| **upper**    | 1       | passive | update upper bound of range                                                                                                         |
-| **fraction** | 2       | passive | update **fraction** (0 <= **fraction** <= 0.5) - if nonzero, ensures that the last fraction of the series is not repeated at the beginning of the next series|
+| Selector | Input   | Type    | Action                                |
+|----------|---------|---------|---------------------------------------|
+| **bang**     | 0       | active  | output next integer in the series |
+| **lower**    | 0       | active  | update lower bound of range, trigger reset/reshuffle |
+| **upper**    | 1       | passive | update upper bound of range |
+| **fraction** | 2       | passive | update **fraction** (0 <= **fraction** <= 0.5) - if nonzero, ensures that the last fraction of the series is not repeated at the beginning of the next series |
 
 note: **upper** and **fraction** inputs take effect when **lower** is input
 
