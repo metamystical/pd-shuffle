@@ -9,7 +9,6 @@ typedef struct shuffle {
   t_inlet *in_lower, *in_upper, *in_fraction;
   t_outlet *out_series;
   int lower;
-  float upper_f;
   int upper;
   float fraction;
   int fracint; // floor of fraction (int)
@@ -66,20 +65,26 @@ void shuffle_bang (t_shuffle *x) {
 
 void shuffle_lower (t_shuffle *x, t_floatarg f) {
   x->lower = (int)f;
-  x->upper = (int)x->upper_f;
   freebytes(x->array, x->array_size);
   shuffle_reset(x);
+}
+
+void shuffle_upper (t_shuffle *x, t_floatarg f) {
+  x->upper = (int)f;
+}
+
+void shuffle_fraction (t_shuffle *x, t_floatarg f) {
+  x->fraction = f;
 }
 
 void *shuffle_new (t_floatarg lower, t_floatarg upper, t_floatarg fraction) {
   t_shuffle *x = (t_shuffle *)pd_new(shuffle_class);
   // leftmost inlet automatically created (and freed)
-  x->in_upper = floatinlet_new(&x->x_obj, &x->upper_f);
-  x->in_fraction = floatinlet_new(&x->x_obj, &x->fraction);
+  x->in_upper = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("upper"));
+  x->in_fraction = inlet_new(&x->x_obj, &x->x_obj.ob_pd, &s_float, gensym("fraction"));
   x->out_series = outlet_new(&x->x_obj, &s_float);
   x->lower = (int)lower;
   x->upper = (int)upper;
-  x->upper_f = upper;
   x->fraction = fraction;
   shuffle_reset(x);
   return (void *)x;
@@ -97,5 +102,8 @@ void shuffle_setup(void) {
     sizeof(t_shuffle), CLASS_DEFAULT, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
   class_addbang(shuffle_class, (t_method)shuffle_bang);
   class_addfloat(shuffle_class, (t_method)shuffle_lower);
+  class_addmethod(shuffle_class, (t_method)shuffle_lower, gensym("lower"), A_FLOAT, 0);  
+  class_addmethod(shuffle_class, (t_method)shuffle_upper, gensym("upper"), A_FLOAT, 0);  
+  class_addmethod(shuffle_class, (t_method)shuffle_fraction, gensym("fraction"), A_FLOAT, 0);  
   srand((unsigned)time(NULL));  
 }
