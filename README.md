@@ -7,16 +7,16 @@ This is a drop-in replacement for the object of the same name in the [Motex libr
 
 ### Description
 
-[shuffle ] outputs all of the integers in a specified range in random order without repeating any, then reshuffles. Inputs are described in the following table:
+[shuffle ] outputs all of the integers in a specified range in random order without repeating any, then reshuffles. Inputs are described in the following table. All selectors can be sent as messages to the left input with arguments as specified:
 
-| Selector | Input   | Type    | Action                                |
-|----------|---------|---------|---------------------------------------|
-| **bang**     | 0       | active  | output next integer in the series |
-| **lower**    | 0       | active  | update lower bound of range, trigger reset/reshuffle |
-| **upper**    | 1       | passive | update upper bound of range |
-| **fraction** | 2       | passive | update **fraction** (0 <= **fraction** <= 0.5) - if nonzero, ensures that the last fraction of the series is not repeated at the beginning of the next series |
+| Selector     | Input  | Message argument | Effect                               |
+|--------------|--------|------------------|---------------------------------------|
+| **bang**     | left   | none  | output next integer in the series |
+| **lower**    | left   | float (truncated to integer) | update lower bound of range, trigger reset/reshuffle |
+| **upper**    | middle | float (truncated to integer) | update upper bound of range |
+| **fraction** | right  | float | update **fraction** (0 <= **fraction** <= 0.5) - if nonzero, ensures that the last fraction of the series is not repeated at the beginning of the next series |
 
-note: **upper** and **fraction** inputs take effect when **lower** is input
+note: **upper** and **fraction** inputs do not take full effect until **lower** is input and a reset/reshuffle is triggered
 
 ### Installation
 
