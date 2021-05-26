@@ -16,7 +16,7 @@ This is a drop-in replacement for the object of the same name in the [Motex libr
 | **upper**    | middle | float (truncated to integer) | update upper bound of range |
 | **fraction** | right  | float | update **fraction** (0 <= **fraction** <= 0.5) - if nonzero, ensures that the last fraction of the series is not repeated at the beginning of the next series |
 
-note: **upper** and **fraction** inputs do not take full effect until **lower** is input and a reset/reshuffle is triggered
+Note: **upper** and **fraction** inputs do not take full effect until **lower** is input and a reset/reshuffle is triggered.
 
 ### Installation
 
